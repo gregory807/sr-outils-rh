@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Progression Salariale — Soumission Rénovation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F6F2;
+  --surface:#FFFFFF;
+  --surface2:#F0EEE8;
+  --border:rgba(0,0,0,0.09);
+  --text:#1C1B18;
+  --text2:#6B6860;
+  --text3:#9A9890;
+  --accent:#1B5E8A;
+  --accent-light:#E8F1F8;
+  --green:#2A6B3C;
+  --green-light:#E6F3EB;
+  --amber:#8A5500;
+  --amber-light:#FDF3E3;
+  --red:#8A1F1F;
+  --red-light:#FDEAEA;
+  --gold:#B8860B;
+  --gold-light:#FBF5E0;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 4px 16px rgba(0,0,0,0.04);
+  --shadow-md:0 2px 8px rgba(0,0,0,0.10),0 8px 32px rgba(0,0,0,0.06);
+}
+html{font-size:15px}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.5;
+}
+/* ── LAYOUT ── */
+.shell{max-width:920px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* ── HEADER ── */
+.header{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:2.5rem;gap:1rem;flex-wrap:wrap;
+}
+.header-left{}
+.logo-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent);color:#fff;
+  font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+  padding:4px 12px;border-radius:99px;margin-bottom:12px;
+}
+.logo-dot{width:7px;height:7px;background:#7DBFE8;border-radius:50%}
+h1{font-size:1.75rem;font-weight:600;letter-spacing:-0.02em;line-height:1.2;color:var(--text)}
+.header-sub{font-size:14px;color:var(--text2);margin-top:4px}
+.mode-switcher{
+  display:flex;background:var(--surface2);border-radius:10px;padding:3px;gap:2px;
+  align-self:flex-start;margin-top:4px;
+}
+.mode-btn{
+  padding:7px 18px;border-radius:8px;border:none;background:transparent;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--text2);
+  cursor:pointer;transition:all 0.18s;white-space:nowrap;
+}
+.mode-btn.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,0.10)}
+
+/* ── PANELS ── */
+.panel{display:none}
+.panel.active{display:block}
+
+/* ── CARDS ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem;
+  box-shadow:var(--shadow);
+}
+.card-title{
+  font-size:11px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:1rem;
+}
+.card-title-lg{font-size:1.05rem;font-weight:600;margin-bottom:.5rem}
+
+/* ── FORM ELEMENTS ── */
+.form-grid{display:grid;gap:1rem}
+.form-grid-2{grid-template-columns:1fr 1fr}
+.form-grid-3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:640px){.form-grid-2,.form-grid-3{grid-template-columns:1fr}}
+label{font-size:13px;color:var(--text2);display:block;margin-bottom:5px;font-weight:500}
+input[type=number],input[type=text],input[type=date],select{
+  width:100%;font-family:'DM Sans',sans-serif;font-size:14px;
+  padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--text);outline:none;
+  transition:border-color 0.15s,box-shadow 0.15s;
+  -webkit-appearance:none;appearance:none;
+}
+input[type=number]:focus,input[type=text]:focus,input[type=date]:focus,select:focus{
+  border-color:var(--accent);box-shadow:0 0 0 3px rgba(27,94,138,0.12);
+}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+.field-note{font-size:11px;color:var(--text3);margin-top:4px}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:3px 10px;border-radius:99px;letter-spacing:0.01em}
+.badge-ok{background:var(--green-light);color:var(--green)}
+.badge-warn{background:var(--amber-light);color:var(--amber)}
+.badge-accel{background:var(--gold-light);color:var(--gold)}
+.badge-info{background:var(--accent-light);color:var(--accent)}
+.badge-na{background:var(--surface2);color:var(--text3)}
+
+/* ── METRIC CARDS ── */
+.metrics-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem}
+@media(max-width:640px){.metrics-row{grid-template-columns:1fr 1fr}}
+.metric{background:var(--surface2);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border)}
+.metric-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px}
+.metric-val{font-size:1.4rem;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+.metric-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.metric.highlight{background:var(--accent);border-color:var(--accent)}
+.metric.highlight .metric-label{color:rgba(255,255,255,0.7)}
+.metric.highlight .metric-val{color:#fff}
+.metric.highlight .metric-sub{color:rgba(255,255,255,0.7)}
+
+/* ── STATUS BAR ── */
+.status-bar{
+  display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;
+  background:var(--surface2);border-radius:var(--radius-sm);padding:1rem 1.25rem;
+  margin-bottom:1.25rem;border:1px solid var(--border);
+}
+.status-item{}
+.status-lbl{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px}
+.status-val{font-size:1.1rem;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums}
+.status-sep{width:1px;height:36px;background:var(--border);flex-shrink:0}
+
+/* ── TABLE ── */
+.qtable{width:100%;border-collapse:collapse;font-size:13px}
+.qtable thead th{
+  text-align:left;padding:8px 10px;font-size:11px;font-weight:600;
+  color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;
+  border-bottom:1.5px solid var(--border);
+}
+.qtable tbody tr:hover{background:var(--surface2)}
+.qtable td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+.qtable tbody tr:last-child td{border-bottom:none}
+.qtable .num{font-variant-numeric:tabular-nums;font-family:'DM Mono',monospace;font-size:12.5px}
+.qtable .yr-sep td{background:var(--accent-light);font-weight:600;color:var(--accent);font-size:12px}
+
+/* ── CHART ── */
+.chart-wrap{position:relative;width:100%;height:240px}
+
+/* ── CHOICE SECTION ── */
+.choice-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;
+}
+@media(max-width:520px){.choice-row{grid-template-columns:1fr}}
+.choice-card{
+  border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:1rem;
+  cursor:pointer;transition:all 0.15s;position:relative;
+}
+.choice-card:hover{border-color:var(--accent);background:var(--accent-light)}
+.choice-card input[type=radio]{position:absolute;opacity:0;width:0;height:0}
+.choice-card.selected{border-color:var(--accent);background:var(--accent-light)}
+.choice-card-title{font-weight:600;font-size:13.5px;margin-bottom:3px;color:var(--text)}
+.choice-card-sub{font-size:12px;color:var(--text2)}
+
+/* ── INFO BOXES (pédagogie) ── */
+.info-box{
+  border-radius:var(--radius-sm);padding:1rem 1.25rem;margin-bottom:1rem;
+  border-left:3px solid;
+}
+.info-box.blue{background:var(--accent-light);border-color:var(--accent)}
+.info-box.green{background:var(--green-light);border-color:var(--green)}
+.info-box.amber{background:var(--amber-light);border-color:var(--amber)}
+.info-box.gold{background:var(--gold-light);border-color:var(--gold)}
+.info-box-title{font-weight:600;font-size:13.5px;margin-bottom:5px;color:var(--text)}
+.info-box p{font-size:13.5px;color:var(--text2);line-height:1.65}
+.info-box p+p{margin-top:.5rem}
+.mono{font-family:'DM Mono',monospace;font-size:12.5px;background:rgba(0,0,0,0.06);padding:1px 6px;border-radius:4px}
+
+/* ── COMPARISON VIZ ── */
+.compare-bars{}
+.compare-label{font-size:12.5px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.bar-wrap{height:8px;background:var(--surface2);border-radius:4px;margin-bottom:14px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.5s cubic-bezier(.4,0,.2,1)}
+.bar-blue{background:var(--accent)}
+.bar-green{background:var(--green)}
+.bar-amber{background:#D97706}
+.compare-vals{display:flex;justify-content:space-between;font-size:12px;color:var(--text3);margin-top:-10px;margin-bottom:8px}
+
+/* ── VACATION SECTION ── */
+.vac-result{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;
+}
+@media(max-width:500px){.vac-result{grid-template-columns:1fr}}
+.vac-box{background:var(--surface2);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border);text-align:center}
+.vac-box-num{font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}
+.vac-box-label{font-size:12px;color:var(--text2);margin-top:3px}
+
+/* ── PRINT / PDF MODE ── */
+.print-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--accent);color:#fff;border:none;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;
+  padding:9px 20px;border-radius:var(--radius-sm);cursor:pointer;
+  transition:background 0.15s;
+}
+.print-btn:hover{background:#154d72}
+.print-btn svg{flex-shrink:0}
+
+/* ── CONFIG notice ── */
+.config-tag{
+  display:inline-flex;align-items:center;gap:5px;background:var(--gold-light);
+  color:var(--gold);font-size:11px;font-weight:600;padding:3px 10px;
+  border-radius:99px;border:1px solid rgba(184,134,11,0.2);margin-bottom:10px;
+}
+
+/* ── ACCEL NOTICE ── */
+.accel-banner{
+  display:none;background:var(--gold-light);border:1px solid rgba(184,134,11,0.3);
+  border-radius:var(--radius-sm);padding:.875rem 1rem;margin-bottom:1rem;
+  font-size:13px;color:var(--amber);font-weight:500;
+}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+
+/* ── SECTION HEADING ── */
+.section-heading{
+  display:flex;align-items:baseline;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap;
+}
+.section-num{
+  width:26px;height:26px;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:12px;font-weight:700;display:inline-flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+}
+.section-title-text{font-size:1rem;font-weight:600;color:var(--text)}
+.section-desc{font-size:13px;color:var(--text2)}
+
+/* ── TOGGLE SWITCH ── */
+.toggle-wrap{display:flex;align-items:center;gap:10px;cursor:pointer}
+.toggle{position:relative;width:40px;height:22px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{
+  position:absolute;inset:0;background:var(--surface2);border-radius:11px;
+  border:1.5px solid var(--border);transition:all 0.18s;cursor:pointer;
+}
+.toggle-slider::before{
+  content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;border-radius:50%;background:#9A9890;
+  transition:all 0.18s;
+}
+.toggle input:checked~.toggle-slider{background:var(--accent);border-color:var(--accent)}
+.toggle input:checked~.toggle-slider::before{left:18px;background:#fff}
+.toggle-label{font-size:13.5px;color:var(--text2);font-weight:500}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff}
+  .shell{max-width:100%;padding:1rem}
+  .mode-switcher,.print-btn,.no-print{display:none!important}
+  .card{box-shadow:none;break-inside:avoid}
+  .panel{display:block!important}
+  #panel-educ,.panel-tab-pedago{display:none!important}
+}
+
+/* ── PLACEHOLDER ── */
+.placeholder{
+  text-align:center;padding:3rem 1rem;color:var(--text3);
+  border:1.5px dashed var(--border);border-radius:var(--radius);
+  font-size:14px;line-height:1.8;
+}
+.placeholder svg{margin-bottom:.75rem;opacity:.35}
+
+/* ── FOOTNOTE ── */
+.footnote{font-size:11.5px;color:var(--text3);line-height:1.7;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+/* ── SCROLLABLE TABLE ── */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ── TABS (pedago) ── */
+.pedago-tabs{display:flex;gap:4px;margin-bottom:1.25rem;flex-wrap:wrap}
+.pedago-tab{
+  padding:6px 16px;border-radius:var(--radius-sm);border:1.5px solid var(--border);
+  background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  color:var(--text2);cursor:pointer;transition:all 0.15s;
+}
+.pedago-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.pedago-section{display:none}
+.pedago-section.active{display:block}
+
+/* ── SMOOTH appear ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.panel.active{animation:fadeIn 0.22s ease}
+
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ══ HEADER ══════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo-tag"><div class="logo-dot"></div>Soumission Rénovation</div>
+    <h1>Progression salariale</h1>
+    <div class="header-sub">Comprendre, simuler et planifier l'évolution de votre rémunération</div>
+  </div>
+  <div class="mode-switcher no-print">
+    <button class="mode-btn active" onclick="setMode('sim')">Simulateur</button>
+    <button class="mode-btn" onclick="setMode('educ')">Guide explicatif</button>
+  </div>
+</div>
+
+<!-- ══ PANEL : SIMULATEUR ════════════════════════════════════════ -->
+<div class="panel active" id="panel-sim">
+
+  <!-- Paramètres employé -->
+  <div class="card">
+    <div class="card-title">Informations employé</div>
+    <div class="form-grid form-grid-3">
+      <div>
+        <label>Poste</label>
+        <select id="posType" onchange="recalc()">
+          <option value="">— Sélectionner —</option>
+          <option>Agent service client</option>
+          <option>Agent administratif</option>
+          <option>Recrutement entrepreneur</option>
+          <option>Chef d'équipe service client</option>
+          <option>Formateur service client</option>
+          <option>Traducteur</option>
+          <option>Rédacteur</option>
+          <option>Coordinateur marketing</option>
+          <option>Stratège de contenu</option>
+          <option>Graphique designer</option>
+          <option>Spécialiste marketing digital</option>
+          <option>Concepteur expérience utilisateur</option>
+          <option>Chef d'équipe support vente</option>
+          <option>Gestionnaire de compte entrepreneur</option>
+          <option>Gestionnaire de compte clé entrepreneur</option>
+          <option>Chargé de compte</option>
+          <option>Chef d'équipe vente</option>
+          <option>Propriétaire de produit</option>
+          <option>Développeur</option>
+          <option>Directeur marketing</option>
+          <option>Directeur service aux usagers</option>
+          <option>Directeur vente</option>
+          <option>Directeur technique</option>
+          <option>Directeur admin</option>
+          <option>Chef d'équipe admin</option>
+        </select>
+      </div>
+      <div>
+        <label>Niveau de séniorité</label>
+        <select id="level" onchange="recalc()">
+          <option value="">— Sélectionner —</option>
+          <option>Stagiaire</option>
+          <option>Junior 1</option>
+          <option>Junior 2</option>
+          <option>Junior 3</option>
+          <option>Intermédiaire 1</option>
+          <option>Intermédiaire 2</option>
+          <option>Intermédiaire 3</option>
+          <option>Senior 1</option>
+          <option>Senior 2</option>
+          <option>Senior 3</option>
+        </select>
+      </div>
+      <div>
+        <label>Salaire annuel actuel ($)</label>
+        <input type="number" id="salaire" placeholder="ex. 47 000" min="0" step="500" oninput="recalc()"/>
+      </div>
+    </div>
+    <div style="margin-top:1rem;" class="form-grid form-grid-2">
+      <div>
+        <label>Date d'embauche</label>
+        <input type="date" id="hireDate" onchange="recalc()"/>
+        <div class="field-note">Utilisé pour calculer la 1ère augmentation (après 6 mois d'ancienneté)</div>
+      </div>
+      <div>
+        <label>Banque de vacances actuelle (heures)</label>
+        <input type="number" id="vacBank" placeholder="ex. 24" min="0" step="1" value="24" oninput="recalc()"/>
+        <div class="field-note">Heures de vacances accumulées annuellement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accélérateur notice -->
+  <div class="accel-banner" id="accelBanner">
+    ⚡ <strong>Accélérateur actif</strong> — Votre salaire est sous le minimum de la grille pour votre poste et niveau. Un taux bonifiée de <strong>3,75 %</strong> (1,25 % + 2,50 %) s'applique jusqu'à ce que vous atteigniez le seuil cible de <span id="accelTarget">—</span>.
+  </div>
+
+  <!-- Résultats hidden until data entered -->
+  <div id="results" style="display:none">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <div class="status-item">
+        <div class="status-lbl">Seuil de la grille</div>
+        <div class="status-val" id="gridMinVal">—</div>
+      </div>
+      <div class="status-sep"></div>
+      <div class="status-item">
+        <div class="status-lbl">Statut</div>
+        <div id="statusBadge" style="margin-top:2px">—</div>
+      </div>
+      <div class="status-sep"></div>
+      <div class="status-item">
+        <div class="status-lbl">1ère augmentation</div>
+        <div class="status-val" id="firstAugDate">—</div>
+      </div>
+      <div class="status-sep"></div>
+      <div class="status-item">
+        <div class="status-lbl">Taux appliqué</div>
+        <div class="status-val" id="activeRate">—</div>
+      </div>
+    </div>
+
+    <!-- Métriques clés -->
+    <div class="metrics-row">
+      <div class="metric">
+        <div class="metric-label">Salaire actuel</div>
+        <div class="metric-val" id="mNow">—</div>
+        <div class="metric-sub">Aujourd'hui</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Dans 1 an</div>
+        <div class="metric-val" id="m1y">—</div>
+        <div class="metric-sub" id="m1ysub">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Dans 5 ans</div>
+        <div class="metric-val" id="m5y">—</div>
+        <div class="metric-sub" id="m5ysub">—</div>
+      </div>
+      <div class="metric highlight">
+        <div class="metric-label">Dans 10 ans</div>
+        <div class="metric-val" id="m10y">—</div>
+        <div class="metric-sub" id="m10ysub">—</div>
+      </div>
+    </div>
+
+    <!-- Choix augmentation / vacances -->
+    <div class="card">
+      <div class="card-title">Option à chaque augmentation trimestrielle</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem;">À chaque période d'augmentation, vous avez le choix entre deux options :</p>
+      <div class="choice-row">
+        <label class="choice-card selected" id="choiceA" onclick="setChoice('salary')">
+          <input type="radio" name="choiceType" value="salary" checked/>
+          <div class="choice-card-title">💰 Augmentation salariale</div>
+          <div class="choice-card-sub">Le taux s'applique directement sur votre salaire annuel</div>
+        </label>
+        <label class="choice-card" id="choiceB" onclick="setChoice('vac')">
+          <input type="radio" name="choiceType" value="vac"/>
+          <div class="choice-card-title">🏖️ Augmentation vacances</div>
+          <div class="choice-card-sub">Le taux se convertit en heures supplémentaires de vacances</div>
+        </label>
+      </div>
+
+      <!-- Résultat option vacances -->
+      <div id="vacResult" style="display:none">
+        <div class="info-box blue">
+          <div class="info-box-title">Calcul de l'option vacances</div>
+          <p>Formule : <span class="mono">(2 080 − 192 − banque actuelle) × taux</span></p>
+          <p style="margin-top:.5rem;font-size:12px;color:var(--text3)">⚠️ Les 192 heures correspondent aux exclusions standards (à confirmer avec Michel). Ce paramètre est ajustable en haut du fichier HTML.</p>
+        </div>
+        <div class="vac-result">
+          <div class="vac-box">
+            <div class="vac-box-num" id="vacHours">—</div>
+            <div class="vac-box-label">Heures de vacances supplémentaires / an</div>
+          </div>
+          <div class="vac-box">
+            <div class="vac-box-num" id="vacDays">—</div>
+            <div class="vac-box-label">Jours ouvrables supplémentaires / an</div>
+          </div>
+        </div>
+        <div class="info-box amber" style="margin-top:.75rem">
+          <div class="info-box-title">À noter — salaire inchangé</div>
+          <p>Si vous choisissez l'option vacances, votre salaire annuel reste le même. Seule votre banque d'heures augmente. La prochaine augmentation sera calculée sur votre salaire actuel (non augmenté).</p>
+        </div>
+      </div>
+
+      <!-- Résultat option salaire -->
+      <div id="salResult">
+        <div class="info-box green">
+          <div class="info-box-title">Impact immédiat sur votre prochain trimestre</div>
+          <p>Au prochain trimestre, votre salaire passera de <strong id="nextFrom">—</strong> à <strong id="nextTo">—</strong>, soit une hausse de <strong id="nextDelta">—</strong>. Cette augmentation est ensuite incluse dans la base pour le trimestre suivant — c'est l'effet composé.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tableau trimestriel -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem">
+        <div>
+          <div class="card-title" style="margin-bottom:0">Projection trimestrielle détaillée</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.75rem">
+          <label class="toggle-wrap no-print">
+            <div class="toggle"><input type="checkbox" id="toggleExtended" onchange="recalc()"/><div class="toggle-slider"></div></div>
+            <span class="toggle-label">Afficher 10 ans</span>
+          </label>
+          <button class="print-btn no-print" onclick="window.print()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimer / PDF
+          </button>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:1rem">Les rangées surlignées = fin d'année. 🔥 = taux accélérateur actif.</p>
+      <div class="table-scroll">
+        <table class="qtable">
+          <thead>
+            <tr>
+              <th>Période</th>
+              <th>Trimestre</th>
+              <th>Salaire avant</th>
+              <th>Salaire après</th>
+              <th>Hausse ($)</th>
+              <th>Taux</th>
+              <th>Cumul depuis début</th>
+            </tr>
+          </thead>
+          <tbody id="qTableBody"></tbody>
+        </table>
+      </div>
+      <div class="footnote" id="tableFootnote"></div>
+    </div>
+
+    <!-- Graphique -->
+    <div class="card">
+      <div class="card-title">Évolution du salaire dans le temps</div>
+      <div class="chart-wrap">
+        <canvas id="projChart"></canvas>
+      </div>
+      <div style="display:flex;gap:1.25rem;margin-top:.75rem;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)"><span style="width:10px;height:10px;border-radius:2px;background:var(--accent);display:inline-block"></span>Salaire projeté</span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)" id="legendGrid"><span style="width:10px;height:3px;background:#D97706;display:inline-block;border-radius:2px"></span>Seuil de la grille</span>
+      </div>
+    </div>
+
+    <!-- Comparaison composé vs fin d'année -->
+    <div class="card">
+      <div class="card-title">Comprendre l'avantage des augmentations trimestrielles composées</div>
+      <p style="font-size:13.5px;color:var(--text2);margin-bottom:1.25rem">
+        Votre régime SR offre des augmentations <strong>trimestrielles composées</strong> plutôt qu'une seule augmentation annuelle. Voici la différence concrète sur votre salaire :
+      </p>
+      <div id="compareSection">
+        <div class="compare-label" id="cmp1lbl">—</div>
+        <div class="bar-wrap"><div class="bar-fill bar-blue" id="cmpBar1" style="width:0%"></div></div>
+        <div class="compare-vals"><span id="cmpV1">—</span><span></span></div>
+
+        <div class="compare-label" id="cmp2lbl">—</div>
+        <div class="bar-wrap"><div class="bar-fill bar-amber" id="cmpBar2" style="width:0%"></div></div>
+        <div class="compare-vals"><span id="cmpV2">—</span><span></span></div>
+
+        <div class="info-box blue" style="margin-top:.5rem">
+          <div class="info-box-title" id="cmpAdvTitle">—</div>
+          <p id="cmpAdvText">—</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+
+  <div class="placeholder" id="placeholder">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l2 2"/></svg><br>
+    Sélectionnez votre poste, votre niveau et entrez votre salaire pour voir votre projection personnalisée.
+  </div>
+
+</div><!-- /panel-sim -->
+
+<!-- ══ PANEL : PÉDAGOGIE ═════════════════════════════════════════ -->
+<div class="panel" id="panel-educ">
+
+  <div class="pedago-tabs">
+    <button class="pedago-tab active" onclick="setPedago('compound')">📈 Effet composé</button>
+    <button class="pedago-tab" onclick="setPedago('firstdate')">📅 Première augmentation</button>
+    <button class="pedago-tab" onclick="setPedago('vachours')">🏖️ Option vacances</button>
+    <button class="pedago-tab" onclick="setPedago('accel')">⚡ Accélérateur</button>
+    <button class="pedago-tab" onclick="setPedago('grid')">📊 Grille salariale</button>
+  </div>
+
+  <!-- COMPOUND -->
+  <div class="pedago-section active" id="pedago-compound">
+    <div class="card">
+      <div class="card-title-lg">📈 L'effet composé — pourquoi c'est plus puissant qu'on pense</div>
+      <div class="info-box blue">
+        <div class="info-box-title">Le principe en une phrase</div>
+        <p>Chaque augmentation est calculée sur un salaire <em>déjà augmenté</em>. Vous ne gagnez pas 1,25 % quatre fois par an — vous gagnez 1,25 % sur un montant qui grossit à chaque trimestre.</p>
+      </div>
+      <div class="divider"></div>
+      <div class="section-heading">
+        <div class="section-num">1</div>
+        <div>
+          <div class="section-title-text">Comparaison : trimestriel SR vs annuel standard</div>
+          <div class="section-desc">Exemple avec un salaire de départ de 50 000 $</div>
+        </div>
+      </div>
+      <div class="info-box green">
+        <div class="info-box-title">Régime SR — 1,25 % à chaque trimestre (composé)</div>
+        <p>T1 : 50 000 $ × 1,0125 = <strong>50 625 $</strong><br>
+        T2 : 50 625 $ × 1,0125 = <strong>51 258 $</strong><br>
+        T3 : 51 258 $ × 1,0125 = <strong>51 898 $</strong><br>
+        T4 : 51 898 $ × 1,0125 = <strong>52 546 $</strong><br>
+        <strong>→ Salaire fin d'année : 52 546 $ (+5,09 %)</strong></p>
+      </div>
+      <div class="info-box amber">
+        <div class="info-box-title">Régime standard — 5 % une fois par an, appliqué l'année suivante</div>
+        <p>Toute l'année : 50 000 $ (aucune hausse en cours d'année)<br>
+        Augmentation en janvier suivant : 50 000 $ × 1,05 = <strong>52 500 $</strong><br>
+        <strong>→ Vous avez vécu une année entière à 50 000 $. La hausse ne profite qu'à l'année suivante.</strong></p>
+      </div>
+      <div class="info-box blue">
+        <div class="info-box-title">La différence réelle après 5 ans</div>
+        <p>Avec le régime SR (trimestriel composé) : <strong>64 067 $</strong><br>
+        Avec un régime standard à 5 % annuel : <strong>63 814 $</strong><br>
+        <em>Et surtout : vous avez touché des salaires plus élevés dès le premier trimestre, pendant 5 ans.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIRST DATE -->
+  <div class="pedago-section" id="pedago-firstdate">
+    <div class="card">
+      <div class="card-title-lg">📅 La première augmentation — la règle des 6 mois</div>
+      <div class="info-box blue">
+        <div class="info-box-title">Règle principale</div>
+        <p>Les augmentations trimestrielles commencent <strong>après 6 mois d'ancienneté</strong>. Cela signifie que les 3 premiers mois d'emploi ne comptent pas comme période d'augmentation active.</p>
+      </div>
+      <div class="divider"></div>
+      <div class="section-heading">
+        <div class="section-num">1</div>
+        <div><div class="section-title-text">Exemple concret</div></div>
+      </div>
+      <div class="info-box green">
+        <p><strong>Date d'embauche : 1er mai 2024</strong><br>
+        Période d'essai / délai initial : 3 mois → aucune augmentation avant le 1er août 2024<br>
+        1ère période d'augmentation eligible : trimestre débutant autour d'août 2024<br>
+        <strong>→ 1ère augmentation effective : environ novembre 2024</strong></p>
+      </div>
+      <div class="info-box amber">
+        <div class="info-box-title">À retenir</div>
+        <p>Si vous avez été embauché en cours de trimestre, vous devrez attendre le début du prochain trimestre complet après vos 6 mois. Le simulateur calcule cette date automatiquement lorsque vous entrez votre date d'embauche.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VACANCES -->
+  <div class="pedago-section" id="pedago-vachours">
+    <div class="card">
+      <div class="card-title-lg">🏖️ L'option vacances — comment ça fonctionne vraiment</div>
+      <div class="info-box blue">
+        <div class="info-box-title">Le principe</div>
+        <p>Plutôt que d'augmenter votre salaire, vous pouvez convertir votre taux d'augmentation en heures supplémentaires de vacances annuelles. Votre salaire reste identique — ce sont vos congés qui augmentent.</p>
+      </div>
+      <div class="divider"></div>
+      <div class="section-heading">
+        <div class="section-num">1</div>
+        <div><div class="section-title-text">La formule</div></div>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:1rem 1.25rem;font-family:'DM Mono',monospace;font-size:13px;margin-bottom:1rem;border:1px solid var(--border)">
+        (2 080 − 192 − heures vacances actuelles) × taux d'augmentation = heures supplémentaires
+      </div>
+      <div class="info-box green">
+        <div class="info-box-title">Exemple — employé à 24h de banque, taux 1,25 %</div>
+        <p>(2 080 − 192 − 24) × 0,0125 = <strong>1 864 × 0,0125 = 23,3 heures supplémentaires / an</strong><br>
+        Soit environ <strong>2,9 jours de vacances supplémentaires</strong> par année.</p>
+      </div>
+      <div class="info-box amber">
+        <div class="info-box-title">Avec l'accélérateur (taux 3,75 %)</div>
+        <p>(2 080 − 192 − 24) × 0,0375 = <strong>69,9 heures supplémentaires / an</strong><br>
+        Soit environ <strong>8,7 jours de vacances supplémentaires</strong> par année.</p>
+      </div>
+      <div class="info-box blue">
+        <div class="info-box-title">Point important — impact sur les augmentations futures</div>
+        <p>Si vous choisissez l'option vacances un trimestre, votre salaire de base ne change pas. L'augmentation du trimestre suivant sera calculée sur le même salaire. <strong>À long terme, une série de choix vacances ralentit la croissance de votre salaire.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCÉLÉRATEUR -->
+  <div class="pedago-section" id="pedago-accel">
+    <div class="card">
+      <div class="card-title-lg">⚡ L'accélérateur — rattrapage pour les employés sous la grille</div>
+      <div class="info-box gold">
+        <div class="info-box-title">Quand s'applique-t-il ?</div>
+        <p>Si votre salaire actuel est <strong>inférieur au seuil minimum de la grille salariale</strong> pour votre poste et votre niveau de séniorité, vous bénéficiez automatiquement d'un taux bonifiée.</p>
+      </div>
+      <div class="divider"></div>
+      <div class="section-heading">
+        <div class="section-num">1</div>
+        <div><div class="section-title-text">Le taux accélérateur</div></div>
+      </div>
+      <div class="info-box green">
+        <p>Taux standard : <strong>1,25 %</strong><br>
+        Bonification accélérateur : <strong>+ 2,50 %</strong><br>
+        <strong>Taux accélérateur total : 3,75 %</strong> par trimestre</p>
+      </div>
+      <div class="section-heading" style="margin-top:1rem">
+        <div class="section-num">2</div>
+        <div><div class="section-title-text">Jusqu'où s'applique-t-il ?</div></div>
+      </div>
+      <div class="info-box amber">
+        <p>L'accélérateur <strong>s'arrête dès que votre salaire atteint le seuil minimum de la grille</strong> pour votre poste et niveau. À ce moment, le taux revient automatiquement à 1,25 %. Le simulateur gère ce basculement automatiquement dans le tableau trimestriel.</p>
+      </div>
+      <div class="info-box blue">
+        <div class="info-box-title">Exemple</div>
+        <p>Employé — Service client Intermédiaire 2 — Seuil grille : 43 000 $ — Salaire actuel : 39 000 $<br>
+        Trimestre 1 (accél.) : 39 000 × 1,0375 = 40 462 $<br>
+        Trimestre 2 (accél.) : 40 462 × 1,0375 = 41 980 $<br>
+        Trimestre 3 (accél.) : 41 980 × 1,0375 = 43 554 $ → dépasse 43 000 $<br>
+        <strong>→ Dès T3, le taux revient à 1,25 %.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRILLE -->
+  <div class="pedago-section" id="pedago-grid">
+    <div class="card">
+      <div class="card-title-lg">📊 Grille salariale — seuils par poste et niveau</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:1rem">Les valeurs ci-dessous représentent le salaire minimum attendu selon votre poste et niveau de séniorité. Un salaire inférieur à ce seuil active l'accélérateur.</p>
+      <div class="table-scroll">
+        <table class="qtable" id="gridTable">
+          <thead>
+            <tr>
+              <th>Poste</th>
+              <th>Stag.</th>
+              <th>Jr 1</th>
+              <th>Jr 2</th>
+              <th>Jr 3</th>
+              <th>Int. 1</th>
+              <th>Int. 2</th>
+              <th>Int. 3</th>
+              <th>Sr 1</th>
+              <th>Sr 2</th>
+              <th>Sr 3</th>
+            </tr>
+          </thead>
+          <tbody id="gridTableBody"></tbody>
+        </table>
+      </div>
+      <div class="footnote">Les cellules affichant « — » indiquent que ce niveau n'est pas applicable pour ce poste. Valeurs en dollars canadiens.</div>
+    </div>
+  </div>
+
+</div><!-- /panel-educ -->
+
+</div><!-- /shell -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// ⚙️  CONFIGURATION — modifiable par l'administrateur
+// ══════════════════════════════════════════════════════════════
+const CFG = {
+  BASE_RATE:   0.0125,   // Taux standard par trimestre
+  ACCEL_BONUS: 0.0250,   // Bonification accélérateur
+  VAC_EXCL:    192,      // Heures exclues (jours fériés + exclusions SR) — À CONFIRMER avec Michel
+  TOTAL_HOURS: 2080,     // Heures annuelles totales
+  FIRST_AUG_MONTHS: 6,  // Mois avant la 1ère augmentation
+};
+
+const ACCEL_RATE = CFG.BASE_RATE + CFG.ACCEL_BONUS;
+
+// ══════════════════════════════════════════════════════════════
+// 📊  GRILLE SALARIALE
+// ══════════════════════════════════════════════════════════════
+const LEVELS = ["Stagiaire","Junior 1","Junior 2","Junior 3","Intermédiaire 1","Intermédiaire 2","Intermédiaire 3","Senior 1","Senior 2","Senior 3"];
+
+const GRID = {
+  "Agent service client":                   [32760,40000,40000,40000,41500,43000,45000,50000,60000,70000],
+  "Agent administratif":                    [32760,40000,40000,40000,41500,43000,45000,50000,60000,70000],
+  "Recrutement entrepreneur":               [32760,40000,40000,40000,41500,43000,45000,50000,60000,70000],
+  "Chef d'équipe service client":           [null, 42000,44500,47500,49500,55000,60000,69000,78000,87000],
+  "Formateur service client":               [null, 41000,43500,46500,48500,53000,58000,65000,74000,80000],
+  "Traducteur":                             [32760,40000,40000,42000,44000,47000,50000,55000,65000,75000],
+  "Rédacteur":                              [32760,40000,40000,42000,44000,47000,50000,55000,65000,75000],
+  "Coordinateur marketing":                 [32760,40000,40000,42000,44000,47000,50000,55000,65000,80000],
+  "Stratège de contenu":                    [32760,40000,40000,42000,44000,47000,50000,55000,65000,80000],
+  "Graphique designer":                     [32760,40000,40000,40000,45000,50000,55000,65000,75000,85000],
+  "Spécialiste marketing digital":          [35000,45000,50000,55000,60000,70000,80000,90000,100000,125000],
+  "Concepteur expérience utilisateur":      [32760,40000,45000,50000,57500,65000,75000,85000,95000,110000],
+  "Chef d'équipe support vente":            [null, 45000,47500,50000,55000,60000,65000,75000,85000,100000],
+  "Gestionnaire de compte entrepreneur":    [32760,40000,42500,45000,52500,57500,62500,75000,87500,100000],
+  "Gestionnaire de compte clé entrepreneur":[50000,55000,57500,60000,65000,70000,77500,90000,100000,115000],
+  "Chargé de compte":                       [32760,40000,40000,42500,47500,50000,55000,62500,72500,85000],
+  "Chef d'équipe vente":                    [null, 45000,47500,52500,62500,70000,77500,90000,100000,115000],
+  "Propriétaire de produit":               [41600,45000,50000,60000,65000,75000,85000,95000,115000,140000],
+  "Développeur":                            [41600,50000,55000,65000,70000,80000,90000,100000,120000,150000],
+  "Directeur marketing":                    [null, 70000,75000,80000,90000,100000,110000,130000,150000,175000],
+  "Directeur service aux usagers":          [null, 55000,60000,65000,70000,75000,85000,95000,115000,140000],
+  "Directeur vente":                        [null, 65000,70000,75000,80000,90000,100000,120000,140000,160000],
+  "Directeur technique":                    [null, 80000,90000,100000,110000,120000,130000,145000,160000,200000],
+  "Directeur admin":                        [null, 45000,50000,55000,60000,65000,75000,85000,100000,120000],
+  "Chef d'équipe admin":                    [null, 45000,50000,55000,60000,65000,75000,85000,100000,120000],
+};
+
+// ══════════════════════════════════════════════════════════════
+// 🛠  HELPERS
+// ══════════════════════════════════════════════════════════════
+function fmt(n){ return "$\u202F"+Math.round(n).toLocaleString("fr-CA"); }
+function fmtPct(r){ return (r*100).toFixed(2)+" %"; }
+
+function getGridMin(pos,lvl){
+  const row=GRID[pos]; if(!row) return null;
+  const idx=LEVELS.indexOf(lvl); if(idx===-1) return null;
+  return row[idx];
+}
+
+// Compute first augmentation date (6 months after hire, snapped to quarter start)
+// SR quarters: Feb, May, Aug, Nov
+function firstAugDate(hireDateStr){
+  if(!hireDateStr) return null;
+  const hire=new Date(hireDateStr+"T00:00:00");
+  const eligible=new Date(hire);
+  eligible.setMonth(eligible.getMonth()+CFG.FIRST_AUG_MONTHS);
+  // Quarter months: 1(Feb),4(May),7(Aug),10(Nov)
+  const qMo=[1,4,7,10];
+  let m=eligible.getMonth();
+  let y=eligible.getFullYear();
+  // find next quarter month >= eligible month
+  let next=qMo.find(q=>q>=m);
+  if(next==null){next=qMo[0];y++;}
+  return new Date(y,next,1);
+}
+
+function quarterLabel(qIdx){
+  const qNames=["Fév–Avr","Mai–Juil","Aoû–Oct","Nov–Jan"];
+  return "Q"+(qIdx%4+1)+" ("+qNames[qIdx%4]+")";
+}
+
+function simulate(startSal, gridMin, numQtrs){
+  let sal=startSal;
+  const rows=[];
+  for(let i=0;i<numQtrs;i++){
+    const underGrid=gridMin!==null && sal<gridMin;
+    const rate=underGrid?ACCEL_RATE:CFG.BASE_RATE;
+    const before=sal;
+    sal=sal*(1+rate);
+    // cap at grid if would overshoot during catchup
+    rows.push({before,after:sal,rate,accel:underGrid,delta:sal-before});
+  }
+  return rows;
+}
+
+// ══════════════════════════════════════════════════════════════
+// 🎛  UI STATE
+// ══════════════════════════════════════════════════════════════
+let choiceType='salary';
+let chartInst=null;
+
+function setMode(m){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+m).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function setChoice(c){
+  choiceType=c;
+  document.getElementById('choiceA').classList.toggle('selected',c==='salary');
+  document.getElementById('choiceB').classList.toggle('selected',c==='vac');
+  document.getElementById('vacResult').style.display=c==='vac'?'block':'none';
+  document.getElementById('salResult').style.display=c==='salary'?'block':'none';
+  recalc();
+}
+
+function setPedago(id){
+  document.querySelectorAll('.pedago-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pedago-section').forEach(s=>s.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('pedago-'+id).classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════
+// 🔁  MAIN RECALC
+// ══════════════════════════════════════════════════════════════
+function recalc(){
+  const pos=document.getElementById('posType').value;
+  const lvl=document.getElementById('level').value;
+  const sal=parseFloat(document.getElementById('salaire').value);
+  const hireDateStr=document.getElementById('hireDate').value;
+  const vacBank=parseFloat(document.getElementById('vacBank').value)||24;
+  const extended=document.getElementById('toggleExtended').checked;
+  const numQtrs=extended?40:20;
+
+  if(!pos||!lvl||isNaN(sal)||sal<=0){
+    document.getElementById('results').style.display='none';
+    document.getElementById('placeholder').style.display='block';
+    document.getElementById('accelBanner').style.display='none';
+    return;
+  }
+
+  document.getElementById('results').style.display='block';
+  document.getElementById('placeholder').style.display='none';
+
+  const gridMin=getGridMin(pos,lvl);
+  const underGrid=gridMin!==null&&sal<gridMin;
+
+  // ── Accel banner
+  const banner=document.getElementById('accelBanner');
+  banner.style.display=underGrid?'flex':'none';
+  if(underGrid) document.getElementById('accelTarget').textContent=fmt(gridMin);
+
+  // ── Grid min display
+  document.getElementById('gridMinVal').textContent=gridMin?fmt(gridMin):'N/A';
+
+  // ── Status badge
+  const sb=document.getElementById('statusBadge');
+  if(gridMin===null) sb.innerHTML='<span class="badge badge-na">Niveau N/A</span>';
+  else if(underGrid) sb.innerHTML='<span class="badge badge-warn">Sous le seuil — accélérateur actif</span>';
+  else sb.innerHTML='<span class="badge badge-ok">Dans la grille salariale</span>';
+
+  // ── First aug date
+  const fad=firstAugDate(hireDateStr);
+  document.getElementById('firstAugDate').textContent=fad
+    ?fad.toLocaleDateString('fr-CA',{month:'long',year:'numeric'})
+    :'Entrez votre date d\'embauche';
+
+  // ── Active rate
+  document.getElementById('activeRate').textContent=underGrid?'3,75 % (accél.)':'1,25 %';
+
+  // ── Simulate
+  const rows=simulate(sal,gridMin,numQtrs);
+
+  // ── Key metrics
+  const sal1y=rows[3]?.after||sal;
+  const sal5y=rows[19]?.after||sal;
+  const sal10y=rows[39]?.after||sal;
+  document.getElementById('mNow').textContent=fmt(sal);
+  document.getElementById('m1y').textContent=fmt(sal1y);
+  document.getElementById('m1ysub').textContent='+'+fmt(sal1y-sal);
+  document.getElementById('m5y').textContent=fmt(sal5y);
+  document.getElementById('m5ysub').textContent='+'+fmt(sal5y-sal);
+  document.getElementById('m10y').textContent=fmt(sal10y);
+  document.getElementById('m10ysub').textContent='+'+fmt(sal10y-sal);
+
+  // ── Next quarter info (salary option)
+  document.getElementById('nextFrom').textContent=fmt(sal);
+  document.getElementById('nextTo').textContent=fmt(rows[0].after);
+  document.getElementById('nextDelta').textContent=fmt(rows[0].delta);
+
+  // ── Vacation option
+  const availHours=CFG.TOTAL_HOURS-CFG.VAC_EXCL-vacBank;
+  const rate=underGrid?ACCEL_RATE:CFG.BASE_RATE;
+  const vacHours=availHours*rate;
+  document.getElementById('vacHours').textContent=vacHours.toFixed(1)+' h';
+  document.getElementById('vacDays').textContent=(vacHours/8).toFixed(1)+' j';
+
+  // ── Quarterly table
+  const tbody=document.getElementById('qTableBody');
+  tbody.innerHTML='';
+  rows.forEach((r,i)=>{
+    const qNum=i+1;
+    const isYearEnd=(qNum%4===0);
+    const yearNum=Math.ceil(qNum/4);
+    if(isYearEnd){
+      const sep=document.createElement('tr');
+      sep.className='yr-sep';
+      sep.innerHTML=`<td colspan="7">✦ Fin Année ${yearNum} — Salaire : ${fmt(r.after)}</td>`;
+      tbody.appendChild(sep);
+    } else {
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td>T+${String(qNum).padStart(2,'0')}</td>
+        <td>${quarterLabel(i)} An ${yearNum}</td>
+        <td class="num">${fmt(r.before)}</td>
+        <td class="num" style="font-weight:600">${fmt(r.after)}</td>
+        <td class="num" style="color:var(--green)">+${fmt(r.delta)}</td>
+        <td><span class="badge ${r.accel?'badge-accel':'badge-info'}">${r.accel?'🔥 ':''}${fmtPct(r.rate)}</span></td>
+        <td class="num" style="color:var(--text2)">${fmtPct((r.after-sal)/sal)}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+  });
+
+  // ── Footnote
+  document.getElementById('tableFootnote').textContent=
+    'Projections sur '+(extended?'10':'5')+' ans · Taux accélérateur 3,75 % actif jusqu\'au seuil de la grille'+(gridMin?' ('+fmt(gridMin)+')':"")+'· 1,25 % standard ensuite.';
+
+  // ── Chart
+  drawChart(rows,gridMin,sal);
+
+  // ── Comparison: compound vs annual
+  const compoundEnd=rows[3]?.after||sal;
+  const annualEquiv=sal*(1+0.05); // hypothetical 5% once/year
+  const maxVal=Math.max(compoundEnd,annualEquiv)*1.05;
+  document.getElementById('cmp1lbl').textContent='SR — 4 × 1,25 % trimestriel (composé) après 1 an';
+  document.getElementById('cmpV1').textContent=fmt(compoundEnd);
+  document.getElementById('cmpBar1').style.width=(compoundEnd/maxVal*100)+'%';
+  document.getElementById('cmp2lbl').textContent='Standard — 5 % annuel unique (profite l\'année suivante)';
+  document.getElementById('cmpV2').textContent=fmt(annualEquiv)+' · mais touché en totalité seulement l\'an prochain';
+  document.getElementById('cmpBar2').style.width=(annualEquiv/maxVal*85)+'%';
+  const diff=compoundEnd-sal;
+  document.getElementById('cmpAdvTitle').textContent='Votre avantage avec le régime SR';
+  document.getElementById('cmpAdvText').textContent=
+    'En 1 an avec le régime SR, vous touchez '+fmt(diff)+' de plus que votre salaire de départ. Avec un régime standard, cette hausse ne se reflèterait dans votre paie qu\'à partir de l\'année suivante — et vous auriez passé une année entière au salaire de départ.';
+}
+
+// ══════════════════════════════════════════════════════════════
+// 📈  CHART
+// ══════════════════════════════════════════════════════════════
+function drawChart(rows,gridMin,startSal){
+  const labels=['Maintenant'];
+  const data=[Math.round(startSal)];
+  rows.forEach((r,i)=>{ labels.push('T+'+(i+1)); data.push(Math.round(r.after)); });
+
+  if(chartInst) chartInst.destroy();
+  const datasets=[{
+    label:'Salaire',
+    data,
+    borderColor:'#1B5E8A',
+    backgroundColor:'rgba(27,94,138,0.07)',
+    fill:true,tension:0.4,
+    pointRadius:(c)=>c.dataIndex%4===0?4:2,
+    pointBackgroundColor:'#1B5E8A',
+    borderWidth:2,
+  }];
+  if(gridMin){
+    datasets.push({
+      label:'Seuil grille',
+      data:Array(data.length).fill(Math.round(gridMin)),
+      borderColor:'#D97706',borderDash:[5,4],borderWidth:1.5,
+      pointRadius:0,fill:false,
+    });
+  }
+  chartInst=new Chart(document.getElementById('projChart'),{
+    type:'line',data:{labels,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:c=>'$'+c.parsed.y.toLocaleString('fr-CA')}},
+      },
+      scales:{
+        x:{ticks:{color:'#9A9890',font:{size:10},maxTicksLimit:12},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{ticks:{color:'#9A9890',font:{size:10},callback:v=>'$'+(v/1000).toFixed(0)+'k'},grid:{color:'rgba(0,0,0,0.05)'}},
+      },
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+// 📊  BUILD GRID TABLE (pédagogie)
+// ══════════════════════════════════════════════════════════════
+function buildGridTable(){
+  const tbody=document.getElementById('gridTableBody');
+  tbody.innerHTML='';
+  Object.entries(GRID).forEach(([pos,vals])=>{
+    const tr=document.createElement('tr');
+    let cells=`<td style="font-weight:500;white-space:nowrap">${pos}</td>`;
+    vals.forEach(v=>{
+      cells+=v?`<td class="num">${fmt(v)}</td>`:`<td style="color:var(--text3);text-align:center">—</td>`;
+    });
+    tr.innerHTML=cells;
+    tbody.appendChild(tr);
+  });
+}
+
+buildGridTable();
+</script>
+</body>
+</html>
