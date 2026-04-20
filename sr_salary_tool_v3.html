@@ -4,7 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Progression Salariale — Soumission Rénovation</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -95,7 +95,7 @@ option{font-weight:400;color:var(--text)}
 .qtable tbody tr:hover td{background:var(--surface2) !important}
 .qtable td{padding:9px 10px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
 .qtable tbody tr:last-child td{border-bottom:none}
-.qtable .num{font-variant-numeric:tabular-nums;font-family:'DM Mono',monospace;font-size:12.5px}
+.qtable .num{font-variant-numeric:tabular-nums;font-size:13px}
 /* Year-end highlight row */
 .qtable tr.yr-end td{background:#EDF4FB !important;font-weight:600}
 .qtable tr.yr-end td:first-child{border-left:3px solid var(--accent)}
@@ -135,7 +135,7 @@ option{font-weight:400;color:var(--text)}
 .vac-result{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem}
 @media(max-width:480px){.vac-result{grid-template-columns:1fr}}
 .vac-box{background:var(--surface2);border-radius:var(--radius-sm);padding:1rem;border:1px solid var(--border);text-align:center}
-.vac-box-num{font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent)}
+.vac-box-num{font-size:1.5rem;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent);font-family:"DM Sans",sans-serif}
 .vac-box-label{font-size:12px;color:var(--text2);margin-top:3px}
 
 /* ── COMPARISON BARS ── */
@@ -177,7 +177,7 @@ option{font-weight:400;color:var(--text)}
 /* ── GRID TABLE (pedago) ── */
 #gridTable td,#gridTable th{white-space:nowrap;padding:7px 10px;font-size:12px}
 #gridTable tbody td.na-cell{color:var(--text3);text-align:center}
-#gridTable tbody td.val-cell{font-family:'DM Mono',monospace;font-size:11.5px;text-align:right}
+#gridTable tbody td.val-cell{font-variant-numeric:tabular-nums;font-size:11.5px;text-align:right}
 
 /* ── PRINT ── */
 @media print{
@@ -220,37 +220,25 @@ option{font-weight:400;color:var(--text)}
   <!-- Infos employé -->
   <div class="card">
     <div class="card-title">Informations employé</div>
-    <div class="form-grid form-grid-4" style="margin-bottom:1rem">
-      <div>
-        <label>Nom de l'employé</label>
-        <input type="text" id="empName" placeholder="ex. Marie Tremblay" oninput="updatePrintMeta()"/>
-      </div>
+    <!-- Ligne 1 -->
+    <div class="form-grid form-grid-3" style="margin-bottom:1rem">
       <div>
         <label>Date de la simulation</label>
         <input type="text" id="simDate" readonly style="background:var(--surface2);color:var(--text2)"/>
       </div>
       <div>
-        <label>Salaire annuel actuel ($)</label>
-        <input type="number" id="salaire" placeholder="ex. 47 000" min="0" step="500" oninput="recalc()"/>
+        <label>Nom de l'employé</label>
+        <input type="text" id="empName" placeholder="ex. Marie Tremblay" oninput="updatePrintMeta()"/>
       </div>
       <div>
-        <label>Niveau de séniorité</label>
-        <select id="level" onchange="recalc()">
-          <option value="">— Sélectionner —</option>
-          <option>Junior 1</option>
-          <option>Junior 2</option>
-          <option>Junior 3</option>
-          <option>Intermédiaire 1</option>
-          <option>Intermédiaire 2</option>
-          <option>Intermédiaire 3</option>
-          <option>Senior 1</option>
-          <option>Senior 2</option>
-          <option>Senior 3</option>
-        </select>
+        <label>Date d'embauche</label>
+        <input type="date" id="hireDate" onchange="recalc()"/>
+        <div class="field-note">1ère augmentation = 1er trimestre SR après 6 mois</div>
       </div>
     </div>
-    <div class="form-grid form-grid-3">
-      <div style="grid-column:span 2">
+    <!-- Ligne 2 -->
+    <div class="form-grid form-grid-2" style="margin-bottom:1rem">
+      <div>
         <label>Poste</label>
         <select id="posType" onchange="recalc()">
           <option value="">— Sélectionner —</option>
@@ -292,16 +280,31 @@ option{font-weight:400;color:var(--text)}
         </select>
       </div>
       <div>
-        <label>Date d'embauche</label>
-        <input type="date" id="hireDate" onchange="recalc()"/>
-        <div class="field-note">Détermine la 1ère période d'augmentation (2e trimestre SR après 6 mois)</div>
+        <label>Niveau de séniorité</label>
+        <select id="level" onchange="recalc()">
+          <option value="">— Sélectionner —</option>
+          <option>Junior 1</option>
+          <option>Junior 2</option>
+          <option>Junior 3</option>
+          <option>Intermédiaire 1</option>
+          <option>Intermédiaire 2</option>
+          <option>Intermédiaire 3</option>
+          <option>Senior 1</option>
+          <option>Senior 2</option>
+          <option>Senior 3</option>
+        </select>
       </div>
     </div>
-    <div class="form-grid form-grid-2" style="margin-top:1rem">
+    <!-- Ligne 3 -->
+    <div class="form-grid form-grid-2">
       <div>
-        <label>Banque de vacances extra (heures)</label>
+        <label>Salaire annuel actuel ($)</label>
+        <input type="number" id="salaire" placeholder="ex. 47 000" min="0" step="500" oninput="recalc()"/>
+      </div>
+      <div>
+        <label>Heures de vacances supplémentaires déjà accumulées</label>
         <input type="number" id="vacBank" placeholder="ex. 0" min="0" step="1" value="0" oninput="recalc()"/>
-        <div class="field-note">Heures de vacances accumulées annuellement en plus de la base</div>
+        <div class="field-note">Heures gagnées via des augmentations passées prises en banque vacances</div>
       </div>
     </div>
   </div>
@@ -387,23 +390,28 @@ option{font-weight:400;color:var(--text)}
       </div>
 
       <div class="result-section" id="vacResult" style="display:none">
-        <div class="info-box blue" style="margin-bottom:.75rem">
-          <div class="info-box-title">Calcul de l'option vacances</div>
-          <p>Formule : <span class="mono">(2 080 − 192 − banque extra) × taux</span></p>
+        <!-- Contexte clair -->
+        <div class="info-box blue" style="margin-bottom:1rem">
+          <div class="info-box-title">Comment fonctionne l'option vacances ?</div>
+          <p>Plutôt qu'augmenter votre salaire, vous convertissez votre hausse en <strong>journées de vacances supplémentaires</strong>. Votre salaire ne change pas, mais votre <strong>taux horaire effectif augmente</strong> puisque vous travaillez moins d'heures pour le même montant.</p>
+          <p style="margin-top:.5rem;font-size:12px;color:var(--text3)">⚠️ Les 192 heures exclues représentent les jours fériés, les vacances de base SR et la fermeture des fêtes — <strong>valeur à confirmer avec Michel</strong>.</p>
         </div>
-        <div class="vac-result">
-          <div class="vac-box">
-            <div class="vac-box-num" id="vacHours">—</div>
-            <div class="vac-box-label">Heures de vacances supplémentaires / an</div>
-          </div>
-          <div class="vac-box">
-            <div class="vac-box-num" id="vacDays">—</div>
-            <div class="vac-box-label">Jours ouvrables supplémentaires / an</div>
+
+        <!-- Mini-simulateur vacances -->
+        <div style="background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border);padding:1rem;margin-bottom:1rem">
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text3);margin-bottom:.875rem">Simulation de votre banque de vacances</div>
+
+          <!-- Timeline visuelle -->
+          <div id="vacTimeline" style="display:flex;flex-direction:column;gap:10px"></div>
+
+          <div style="margin-top:1rem;padding-top:.875rem;border-top:1px solid var(--border);font-size:12px;color:var(--text3)">
+            ⚠️ Maximum de semaines pouvant être accumulées via cette option : <strong>[À CONFIRMER avec Michel]</strong>
           </div>
         </div>
-        <div class="info-box amber" style="margin-top:.75rem;margin-bottom:0">
-          <div class="info-box-title">Ce qui change avec cette option</div>
-          <p>Votre salaire annuel reste identique — seule votre banque d'heures augmente. Cependant, votre <strong>taux horaire effectif augmente</strong> puisque vous travaillez moins d'heures pour le même salaire. La prochaine augmentation sera calculée sur ce même salaire de base.</p>
+
+        <div class="info-box amber" style="margin-bottom:0">
+          <div class="info-box-title">Rappel important</div>
+          <p>Si vous choisissez l'option vacances, votre salaire de base reste le même pour les prochains trimestres. Les augmentations futures seront calculées sur ce salaire inchangé.</p>
         </div>
       </div>
     </div>
@@ -528,7 +536,7 @@ option{font-weight:400;color:var(--text)}
       <div class="card-title-lg">📅 La première augmentation — comment elle est calculée</div>
       <div class="info-box blue">
         <div class="info-box-title">La règle</div>
-        <p>Les augmentations trimestrielles débutent après <strong>6 mois d'ancienneté</strong>. De plus, la première augmentation ne tombe pas au premier trimestre SR suivant vos 6 mois — elle tombe au <strong>deuxième trimestre SR</strong> suivant. Cela laisse le temps à la paie de s'ajuster correctement.</p>
+        <p>Les augmentations trimestrielles débutent à partir du <strong>1er trimestre SR suivant vos 6 mois d'ancienneté</strong>. Les 3 premiers mois, vous êtes en période d'intégration — aucune augmentation ne s'applique pendant cette période.</p>
       </div>
       <div class="divider"></div>
       <div class="section-heading">
@@ -537,17 +545,17 @@ option{font-weight:400;color:var(--text)}
       </div>
       <div class="info-box green">
         <p>
-          <strong>Date d'embauche : 1er janvier 2025</strong><br>
-          6 mois d'ancienneté atteints : 1er juillet 2025<br>
-          1er trimestre SR suivant : Août 2025 → <em>skippé</em><br>
-          <strong>→ 1ère augmentation : Novembre 2025 (T4)</strong>
+          <strong>Date d'embauche : 18 septembre 2025</strong><br>
+          6 mois d'ancienneté atteints : 18 mars 2026<br>
+          1er trimestre SR suivant mars 2026 : Mai 2026<br>
+          <strong>→ 1ère augmentation : Mai 2026 (T2)</strong>
         </p>
       </div>
       <div class="info-box amber">
-        <div class="info-box-title">Autre exemple — embauche en mars</div>
+        <div class="info-box-title">Autre exemple — embauche en janvier</div>
         <p>
-          <strong>Date d'embauche : 1er mars 2025</strong><br>
-          6 mois atteints : 1er septembre 2025<br>
+          <strong>Date d'embauche : 1er janvier 2025</strong><br>
+          6 mois atteints : 1er juillet 2025<br>
           1er trimestre SR suivant : Novembre 2025 → <em>skippé</em><br>
           <strong>→ 1ère augmentation : Février 2026 (T1)</strong>
         </p>
@@ -708,10 +716,8 @@ function firstAugDate(hireDateStr){
   const hire=new Date(hireDateStr+"T00:00:00");
   const eligible=new Date(hire);
   eligible.setMonth(eligible.getMonth()+6);
-  const firstQtr=nextSRQuarter(eligible);
-  // skip firstQtr, go to next SR quarter
-  const secondQtr=nextSRQuarter(new Date(firstQtr.getFullYear(),firstQtr.getMonth()+1,1));
-  return secondQtr;
+  // 1st SR quarter on or after the 6-month eligibility date
+  return nextSRQuarter(eligible);
 }
 
 // Which SR quarter index (0-3) does a date fall in?
@@ -890,11 +896,11 @@ function recalc(){
   document.getElementById('nextTo').textContent=fmt(nextR.after);
   document.getElementById('nextDelta').textContent=fmt(nextR.delta);
 
-  // Vacation option
+  // Vacation option — mini simulator
   const availHours=CFG.TOTAL_HOURS-CFG.VAC_EXCL-vacBank;
-  const vacH=Math.round(availHours*firstRate);
-  document.getElementById('vacHours').textContent=vacH+' h';
-  document.getElementById('vacDays').textContent=(vacH/8).toFixed(1)+' j';
+  const vacPerQtr=Math.round(availHours*firstRate);
+  const vacPerQtrFull=Math.round((CFG.TOTAL_HOURS-CFG.VAC_EXCL-vacBank)*ACCEL_RATE);
+  updateVacTimeline(vacBank, vacPerQtr, firstRate);
 
   // Build quarterly table (show all 40, every T+04, T+08 etc is year-end)
   const tbody=document.getElementById('qTableBody');
@@ -989,6 +995,46 @@ function drawChart(rows,gridMin,startSal){
         y:{ticks:{color:'#9A9890',font:{size:10},callback:v=>'$'+(v/1000).toFixed(0)+'k'},grid:{color:'rgba(0,0,0,0.05)'}},
       },
     }
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// VACATION TIMELINE
+// ══════════════════════════════════════════════════════
+function updateVacTimeline(currentExtra, vacPerQtr, rate){
+  const container=document.getElementById('vacTimeline');
+  if(!container) return;
+
+  const BASE_VAC_H=CFG.VAC_EXCL; // 192h = base incluse dans l'exclusion
+  const WORK_DAYS_PER_H=8;
+
+  // Scénarios
+  const scenarios=[
+    {label:"Aujourd'hui (votre banque actuelle)", extra:currentExtra, highlight:false},
+    {label:"Après 1 augmentation trimestre prise en vacances", extra:currentExtra+vacPerQtr, highlight:false},
+    {label:"Après 4 augmentations trimestrielles en vacances (1 an complet)", extra:currentExtra+(vacPerQtr*4), highlight:true},
+  ];
+
+  const maxExtra=scenarios[scenarios.length-1].extra;
+  const maxBar=Math.max(maxExtra,1);
+
+  container.innerHTML='';
+  scenarios.forEach(s=>{
+    const days=(s.extra/WORK_DAYS_PER_H).toFixed(1);
+    const pct=Math.min(100,(s.extra/maxBar)*95+5);
+    const color=s.highlight?'var(--accent)':'var(--text3)';
+    const bgBar=s.highlight?'var(--accent)':'#BDD7EE';
+    container.innerHTML+=`
+      <div>
+        <div style="font-size:12px;color:${color};font-weight:${s.highlight?'600':'400'};margin-bottom:4px">${s.label}</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${bgBar};border-radius:5px;transition:width 0.4s"></div>
+          </div>
+          <div style="font-size:13px;font-weight:600;color:${color};white-space:nowrap;min-width:90px">${s.extra} h / ${days} j</div>
+        </div>
+      </div>
+    `;
   });
 }
 
