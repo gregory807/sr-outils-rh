@@ -97,8 +97,7 @@ option{font-weight:400;color:var(--text)}
 .qtable tbody tr:last-child td{border-bottom:none}
 .qtable .num{font-variant-numeric:tabular-nums;font-size:13px}
 /* Year-end highlight row */
-.qtable tr.yr-end td{background:#EDF4FB !important;font-weight:600}
-.qtable tr.yr-end td:first-child{border-left:3px solid var(--accent)}
+
 
 /* ── CHOICE CARDS — more distinct ── */
 .choice-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
@@ -127,6 +126,7 @@ option{font-weight:400;color:var(--text)}
 
 /* ── CHART ── */
 .chart-wrap{position:relative;width:100%;height:240px}
+.salary-proj-sections{transition:opacity 0.2s}
 
 /* ── ACCEL BANNER ── */
 .accel-banner{display:none;align-items:flex-start;gap:10px;background:var(--gold-light);border:1px solid rgba(184,134,11,0.3);border-radius:var(--radius-sm);padding:.875rem 1rem;margin-bottom:1rem;font-size:13px;color:var(--amber);font-weight:500}
@@ -224,7 +224,7 @@ option{font-weight:400;color:var(--text)}
     <div class="form-grid form-grid-3" style="margin-bottom:1rem">
       <div>
         <label>Date de la simulation</label>
-        <input type="text" id="simDate" readonly style="background:var(--surface2);color:var(--text2)"/>
+        <input type="text" id="simDate" readonly style="background:var(--surface2);color:var(--text2);cursor:default"/>
       </div>
       <div>
         <label>Nom de l'employé</label>
@@ -394,7 +394,7 @@ option{font-weight:400;color:var(--text)}
         <div class="info-box blue" style="margin-bottom:1rem">
           <div class="info-box-title">Comment fonctionne l'option vacances ?</div>
           <p>Plutôt qu'augmenter votre salaire, vous convertissez votre hausse en <strong>journées de vacances supplémentaires</strong>. Votre salaire ne change pas, mais votre <strong>taux horaire effectif augmente</strong> puisque vous travaillez moins d'heures pour le même montant.</p>
-          <p style="margin-top:.5rem;font-size:12px;color:var(--text3)">⚠️ Les 192 heures exclues représentent les jours fériés, les vacances de base SR et la fermeture des fêtes — <strong>valeur à confirmer avec Michel</strong>.</p>
+          <p style="margin-top:.5rem;font-size:12px;color:var(--text3)">Le calcul exclut 192 heures (vacances de base, fériés, fêtes, maladie). Consultez le <strong>Guide explicatif → Option vacances</strong> pour le détail complet.</p>
         </div>
 
         <!-- Mini-simulateur vacances -->
@@ -404,8 +404,8 @@ option{font-weight:400;color:var(--text)}
           <!-- Timeline visuelle -->
           <div id="vacTimeline" style="display:flex;flex-direction:column;gap:10px"></div>
 
-          <div style="margin-top:1rem;padding-top:.875rem;border-top:1px solid var(--border);font-size:12px;color:var(--text3)">
-            ⚠️ Maximum de semaines pouvant être accumulées via cette option : <strong>[À CONFIRMER avec Michel]</strong>
+          <div id="vacMaxNote" style="margin-top:1rem;padding-top:.875rem;border-top:1px solid var(--border);font-size:12px;color:var(--text2)">
+            📌 <strong>Maximum :</strong> 6 semaines de vacances au total (incluant les 2 semaines de base), soit <strong>4 semaines / 160 heures supplémentaires</strong> accumulables via cette option (160h extra + 80h base = 240h / 6 semaines au total).
           </div>
         </div>
 
@@ -416,6 +416,8 @@ option{font-weight:400;color:var(--text)}
       </div>
     </div>
 
+    <!-- Salary projection sections (hidden when vacation mode) -->
+    <div id="salaryProjSections" style="display:block">
     <!-- Tableau trimestriel -->
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem">
@@ -431,7 +433,7 @@ option{font-weight:400;color:var(--text)}
           <thead>
             <tr>
               <th>Période</th>
-              <th>Trimestre</th>
+              <th>Date effective</th>
               <th>Salaire avant</th>
               <th>Salaire après</th>
               <th>Hausse ($)</th>
@@ -471,6 +473,7 @@ option{font-weight:400;color:var(--text)}
       </div>
     </div>
 
+    </div><!-- /salaryProjSections -->
   </div><!-- /results -->
 
   <div class="placeholder" id="placeholder">
@@ -552,12 +555,12 @@ option{font-weight:400;color:var(--text)}
         </p>
       </div>
       <div class="info-box amber">
-        <div class="info-box-title">Autre exemple — embauche en janvier</div>
+        <div class="info-box-title">Autre exemple — embauche en janvier 2026</div>
         <p>
-          <strong>Date d'embauche : 1er janvier 2025</strong><br>
-          6 mois atteints : 1er juillet 2025<br>
-          1er trimestre SR suivant : Novembre 2025 → <em>skippé</em><br>
-          <strong>→ 1ère augmentation : Février 2026 (T1)</strong>
+          <strong>Date d'embauche : 1er janvier 2026</strong><br>
+          6 mois d'ancienneté atteints : 1er juillet 2026<br>
+          1ère date SR après juillet 2026 : 6 août 2026<br>
+          <strong>→ 1ère augmentation : 6 août 2026</strong>
         </p>
       </div>
     </div>
@@ -576,8 +579,18 @@ option{font-weight:400;color:var(--text)}
         <div class="section-num">1</div>
         <div><div class="section-title-text">La formule</div></div>
       </div>
-      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:1rem 1.25rem;font-family:'DM Mono',monospace;font-size:13px;margin-bottom:1rem;border:1px solid var(--border)">
+      <div style="background:var(--surface2);border-radius:var(--radius-sm);padding:1rem 1.25rem;font-size:13px;margin-bottom:1rem;border:1px solid var(--border);font-family:'DM Sans',sans-serif">
         (2 080 − 192 − banque extra actuelle) × taux = heures supplémentaires
+      </div>
+      <div class="info-box blue" style="margin-bottom:1rem">
+        <div class="info-box-title">Décomposition des 192 heures exclues</div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:6px 24px;margin-top:.5rem;font-size:13px">
+          <span style="color:var(--text2)">Vacances de base SR (2 semaines)</span><span style="font-weight:600">80 h</span>
+          <span style="color:var(--text2)">Jours fériés Québec (8 jours)</span><span style="font-weight:600">64 h</span>
+          <span style="color:var(--text2)">Fermeture bureau — temps des fêtes (4 jours)</span><span style="font-weight:600">32 h</span>
+          <span style="color:var(--text2)">Jours de maladie (2 jours)</span><span style="font-weight:600">16 h</span>
+          <span style="font-weight:700;border-top:1px solid var(--border);padding-top:6px">Total exclu</span><span style="font-weight:700;color:var(--accent);border-top:1px solid var(--border);padding-top:6px">192 h</span>
+        </div>
       </div>
       <div class="info-box green">
         <div class="info-box-title">Exemple — banque extra 0h, taux 1,25 %</div>
@@ -685,9 +698,21 @@ const GRID = {
   "Directeur admin":                        [45000,50000,55000,60000,65000,75000,85000,100000,120000],
 };
 
-// SR quarter months: Feb=1, May=4, Aug=7, Nov=10
+// ── Dates exactes des augmentations SR ──────────────────────────────────
+// 2027 : à confirmer avec Michel
+const SR_PAY_DATES = [
+  new Date(2026, 1,  5),  // 5 février 2026
+  new Date(2026, 4, 14),  // 14 mai 2026
+  new Date(2026, 7,  6),  // 6 août 2026
+  new Date(2026,10, 12),  // 12 novembre 2026
+  new Date(2027, 1,  4),  // 4 février 2027 ⚠️ approx.
+  new Date(2027, 4,  6),  // 6 mai 2027 ⚠️ approx.
+  new Date(2027, 7,  5),  // 5 août 2027 ⚠️ approx.
+  new Date(2027,10,  4),  // 4 novembre 2027 ⚠️ approx.
+];
+
+// SR quarter months (used for fallback beyond known dates)
 const SR_QTR_MONTHS = [1,4,7,10];
-const QTR_LABELS = ["Fév–Avr","Mai–Juil","Aoû–Oct","Nov–Jan"];
 
 // ══════════════════════════════════════════════════════
 // HELPERS
@@ -716,7 +741,10 @@ function firstAugDate(hireDateStr){
   const hire=new Date(hireDateStr+"T00:00:00");
   const eligible=new Date(hire);
   eligible.setMonth(eligible.getMonth()+6);
-  // 1st SR quarter on or after the 6-month eligibility date
+  // Find first exact SR pay date on or after eligibility
+  const exact=SR_PAY_DATES.find(d=>d>=eligible);
+  if(exact) return exact;
+  // Fallback: next SR quarter month
   return nextSRQuarter(eligible);
 }
 
@@ -778,7 +806,7 @@ let chartInst=null;
 // ══════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════
-document.getElementById('simDate').value = new Date().toLocaleDateString('fr-CA');
+document.getElementById('simDate').value=new Date().toLocaleDateString('fr-CA',{year:'numeric',month:'long',day:'numeric'});
 buildGridTable();
 
 // ══════════════════════════════════════════════════════
@@ -797,6 +825,8 @@ function setChoice(c){
   document.getElementById('choiceB').classList.toggle('selected',c==='vac');
   document.getElementById('vacResult').style.display=c==='vac'?'block':'none';
   document.getElementById('salResult').style.display=c==='salary'?'block':'none';
+  const proj=document.getElementById('salaryProjSections');
+  if(proj) proj.style.display=c==='salary'?'block':'none';
   recalc();
 }
 
@@ -823,6 +853,7 @@ function doPrint(){
 // MAIN RECALC
 // ══════════════════════════════════════════════════════
 function recalc(){
+  const today=new Date(); // declared once at top level of recalc
   const pos=document.getElementById('posType').value;
   const lvl=document.getElementById('level').value;
   const sal=parseFloat(document.getElementById('salaire').value);
@@ -857,18 +888,18 @@ function recalc(){
   // First aug date
   const fad=firstAugDate(hireDateStr);
   document.getElementById('firstAugDate').textContent=fad
-    ?fad.toLocaleDateString('fr-CA',{month:'long',year:'numeric'})
+    ?fad.toLocaleDateString('fr-CA',{day:'numeric',month:'long',year:'numeric'})
     :'Entrez votre date d\'embauche';
 
-  // How many quarters until first aug?
+  // How many SR pay periods from today until first aug?
   let firstAugQ=0;
   if(hireDateStr && fad){
-    const today=new Date();
-    // count SR quarters from today to fad
-    // Approximate: each quarter = 3 months
-    const msPerQtr=91.25*24*3600*1000;
-    const diff=fad-today;
-    if(diff>0) firstAugQ=Math.max(0,Math.ceil(diff/msPerQtr));
+    if(fad>today){
+      // Count how many SR_PAY_DATES between today and fad
+      firstAugQ=SR_PAY_DATES.filter(d=>d>today && d<fad).length;
+      // Clamp
+      firstAugQ=Math.max(0,Math.min(firstAugQ,8));
+    }
   }
 
   // Active rate (first active quarter)
@@ -902,33 +933,54 @@ function recalc(){
   const vacPerQtrFull=Math.round((CFG.TOTAL_HOURS-CFG.VAC_EXCL-vacBank)*ACCEL_RATE);
   updateVacTimeline(vacBank, vacPerQtr, firstRate);
 
-  // Build quarterly table (show all 40, every T+04, T+08 etc is year-end)
+  // Build quarterly table — using real SR pay dates
   const tbody=document.getElementById('qTableBody');
   tbody.innerHTML='';
+
+  // T+01 = next SR date from TODAY (dynamic)
+  const futureDates=SR_PAY_DATES.filter(d=>d>today);
+  const knownCount=futureDates.length;
+
+  function getPayDate(qIndex){
+    if(qIndex<futureDates.length) return futureDates[qIndex];
+    const last=SR_PAY_DATES[SR_PAY_DATES.length-1];
+    const extra=qIndex-futureDates.length+1;
+    const d=new Date(last);
+    d.setMonth(d.getMonth()+extra*3);
+    return d;
+  }
+
+  // Determine eligibility: how many future SR dates before firstAug?
+  const inactiveCount = fad ? futureDates.filter(d=>d<fad).length : 0;
+
+  const fmtDate=(d)=>d.toLocaleDateString('fr-CA',{day:'numeric',month:'short',year:'numeric'});
+
   for(let i=0;i<40;i++){
     const r=rows[i];
     const qNum=i+1;
     const yearNum=Math.ceil(qNum/4);
-    const qIdx=(i%4);
-    const isYearEnd=(qNum%4===0);
+    const payDate=getPayDate(i);
+    const isApprox=(i>=knownCount);
+    const isInactive=(hireDateStr && fad && i<inactiveCount);
     const tr=document.createElement('tr');
-    if(isYearEnd) tr.className='yr-end';
+
 
     let rateBadge;
-    if(r.inactive){
-      rateBadge=`<span class="badge badge-na">⏸ —</span>`;
+    if(isInactive){
+      rateBadge=`<span class="badge badge-na">⏸ en attente</span>`;
     } else if(r.accel){
       rateBadge=`<span class="badge badge-accel">🔥 ${fmtPct(r.rate)}</span>`;
     } else {
       rateBadge=`<span class="badge badge-info">${fmtPct(r.rate)}</span>`;
     }
 
-    const deltaStr=r.inactive?'—':`+${fmt(r.delta)}`;
-    const cumPct=r.inactive?'—':fmtPct((r.after-sal)/sal);
+    const deltaStr=isInactive?'—':`+${fmt(r.delta)}`;
+    const cumPct=isInactive?'—':fmtPct((r.after-sal)/sal);
+    const dateLabel=fmtDate(payDate)+(isApprox?' *':'');
 
     tr.innerHTML=`
-      <td style="font-weight:600;${isYearEnd?'color:var(--accent)':''}">T+${String(qNum).padStart(2,'0')}${isYearEnd?' ✦':''}</td>
-      <td style="font-size:12px;color:var(--text2)">${qtrLabel(qIdx,yearNum)}</td>
+      <td style="font-weight:600;">T+${String(qNum).padStart(2,'0')}</td>
+      <td style="font-size:12px;color:var(--text2)">${dateLabel}</td>
       <td class="num">${fmt(r.before)}</td>
       <td class="num" style="font-weight:600">${fmt(r.after)}</td>
       <td class="num" style="color:var(--green)">${deltaStr}</td>
@@ -939,7 +991,7 @@ function recalc(){
   }
 
   document.getElementById('tableFootnote').textContent=
-    'Projection sur 10 ans (40 trimestres) · Accélérateur 3,75 % actif jusqu\'au seuil'+(gridMin?' ('+fmt(gridMin)+')':'')+' · Taux réduit proportionnellement à l\'approche du seuil · ✦ = fin d\'année';
+    'Dates SR 2026 confirmées · * Dates 2027+ approximatives (à confirmer avec Michel) · Accélérateur 3,75 % actif jusqu\'au seuil'+(gridMin?' ('+fmt(gridMin)+')':'');
 
   // Chart (10 years)
   drawChart(rows,gridMin,sal);
@@ -1009,29 +1061,39 @@ function updateVacTimeline(currentExtra, vacPerQtr, rate){
   const WORK_DAYS_PER_H=8;
 
   // Scénarios
+  const BASE_H=80; // 2 semaines de base SR
   const scenarios=[
-    {label:"Aujourd'hui (votre banque actuelle)", extra:currentExtra, highlight:false},
-    {label:"Après 1 augmentation trimestre prise en vacances", extra:currentExtra+vacPerQtr, highlight:false},
-    {label:"Après 4 augmentations trimestrielles en vacances (1 an complet)", extra:currentExtra+(vacPerQtr*4), highlight:true},
+    {label:"Aujourd'hui — vacances de base SR", extra:BASE_H+currentExtra, isBase:true, highlight:false},
+    {label:"Après 1 augmentation prise en vacances", extra:BASE_H+currentExtra+vacPerQtr, isBase:false, highlight:false},
+    {label:"Après 4 augmentations en vacances (1 an complet)", extra:BASE_H+currentExtra+(vacPerQtr*4), isBase:false, highlight:true},
   ];
 
   const maxExtra=scenarios[scenarios.length-1].extra;
   const maxBar=Math.max(maxExtra,1);
 
+  const MAX_EXTRA_H=240; // max 6 semaines total (80h base + 160h extra accumulable)
   container.innerHTML='';
   scenarios.forEach(s=>{
-    const days=(s.extra/WORK_DAYS_PER_H).toFixed(1);
-    const pct=Math.min(100,(s.extra/maxBar)*95+5);
-    const color=s.highlight?'var(--accent)':'var(--text3)';
-    const bgBar=s.highlight?'var(--accent)':'#BDD7EE';
+    const extra=Math.min(s.extra,MAX_EXTRA_H);
+    const weeks=(extra/40).toFixed(1);
+    const days=(extra/WORK_DAYS_PER_H).toFixed(1);
+    const atMax=s.extra>=MAX_EXTRA_H;
+    const pct=Math.min(100,(extra/MAX_EXTRA_H)*100);
+    const color=s.highlight?'var(--accent)':atMax?'var(--green)':'var(--text3)';
+    const bgBar=s.highlight?'var(--accent)':atMax?'var(--green)':'#BDD7EE';
     container.innerHTML+=`
       <div>
-        <div style="font-size:12px;color:${color};font-weight:${s.highlight?'600':'400'};margin-bottom:4px">${s.label}</div>
+        <div style="font-size:12px;color:${color};font-weight:${s.highlight||atMax?'600':'400'};margin-bottom:4px">
+          ${s.label}${atMax?' 🏆 Maximum atteint':''}
+        </div>
         <div style="display:flex;align-items:center;gap:10px">
           <div style="flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden">
             <div style="width:${pct}%;height:100%;background:${bgBar};border-radius:5px;transition:width 0.4s"></div>
           </div>
-          <div style="font-size:13px;font-weight:600;color:${color};white-space:nowrap;min-width:90px">${s.extra} h / ${days} j</div>
+          <div style="text-align:right;min-width:80px">
+            <div style="font-size:14px;font-weight:700;color:${color}">${extra} heures</div>
+            <div style="font-size:11px;color:var(--text3)">${days} jours · ${weeks} semaines</div>
+          </div>
         </div>
       </div>
     `;
