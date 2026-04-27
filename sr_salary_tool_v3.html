@@ -233,7 +233,7 @@ option{font-weight:400;color:var(--text)}
       <div>
         <label>Date d'embauche</label>
         <input type="date" id="hireDate" onchange="recalc()"/>
-        <div class="field-note">1ère augmentation = 1er trimestre SR après 6 mois</div>
+        <div class="field-note">1ère augmentation = 1ère date SR après 3 mois d'ancienneté</div>
       </div>
     </div>
     <!-- Ligne 2 -->
@@ -243,39 +243,39 @@ option{font-weight:400;color:var(--text)}
         <select id="posType" onchange="recalc()">
           <option value="">— Sélectionner —</option>
           <optgroup label="Service client">
-            <option>Agent service client</option>
-            <option>Chef d'équipe service client</option>
-            <option>Formateur service client</option>
-            <option>Directeur service aux usagers</option>
+            <option>Agent.e service client</option>
+            <option>Chef.fe d'équipe service client</option>
+            <option>Formateur.trice service client</option>
+            <option>Directeur.trice service aux usagers</option>
           </optgroup>
           <optgroup label="Ventes">
-            <option>Chargé de compte</option>
+            <option>Chargé.e de compte</option>
             <option>Gestionnaire de compte entrepreneur</option>
             <option>Gestionnaire de compte clé entrepreneur</option>
-            <option>Chef d'équipe vente</option>
-            <option>Chef d'équipe support vente</option>
+            <option>Chef.fe d'équipe vente</option>
+            <option>Chef.fe d'équipe support vente</option>
             <option>Recrutement entrepreneur</option>
-            <option>Directeur vente</option>
+            <option>Directeur.trice vente</option>
           </optgroup>
           <optgroup label="Marketing">
-            <option>Coordinateur marketing</option>
+            <option>Coordinateur.trice marketing</option>
             <option>Stratège de contenu</option>
-            <option>Rédacteur</option>
+            <option>Rédacteur.trice</option>
             <option>Graphique designer</option>
             <option>Spécialiste marketing digital</option>
-            <option>Concepteur expérience utilisateur</option>
-            <option>Directeur marketing</option>
+            <option>Concepteur.trice expérience utilisateur</option>
+            <option>Directeur.trice marketing</option>
           </optgroup>
           <optgroup label="Technologie">
-            <option>Développeur</option>
+            <option>Développeur.euse</option>
             <option>Propriétaire de produit</option>
-            <option>Directeur technique</option>
+            <option>Directeur.trice technique</option>
           </optgroup>
           <optgroup label="Administration">
-            <option>Agent administratif</option>
-            <option>Chef d'équipe admin</option>
-            <option>Traducteur</option>
-            <option>Directeur admin</option>
+            <option>Agent.e administratif.ve</option>
+            <option>Chef.fe d'équipe admin</option>
+            <option>Traducteur.trice</option>
+            <option>Directeur.trice admin</option>
           </optgroup>
         </select>
       </div>
@@ -539,7 +539,7 @@ option{font-weight:400;color:var(--text)}
       <div class="card-title-lg">📅 La première augmentation — comment elle est calculée</div>
       <div class="info-box blue">
         <div class="info-box-title">La règle</div>
-        <p>Les augmentations trimestrielles débutent à partir du <strong>1er trimestre SR suivant vos 6 mois d'ancienneté</strong>. Les 3 premiers mois, vous êtes en période d'intégration — aucune augmentation ne s'applique pendant cette période.</p>
+        <p>Les augmentations trimestrielles débutent à partir de la <strong>1ère date SR suivant vos 3 mois d'ancienneté</strong>. Les 3 premiers mois constituent votre période d'intégration — aucune augmentation ne s'applique pendant cette période.</p>
       </div>
       <div class="divider"></div>
       <div class="section-heading">
@@ -548,18 +548,19 @@ option{font-weight:400;color:var(--text)}
       </div>
       <div class="info-box green">
         <p>
-          <strong>Date d'embauche : 18 septembre 2025</strong><br>
-          6 mois d'ancienneté atteints : 18 mars 2026<br>
-          1er trimestre SR suivant mars 2026 : Mai 2026<br>
-          <strong>→ 1ère augmentation : Mai 2026 (T2)</strong>
+          <strong>Date d'embauche : 1er janvier 2026</strong><br>
+          3 mois d'ancienneté atteints : 1er avril 2026<br>
+          1ère date SR après le 1er avril 2026 : 14 mai 2026<br>
+          <strong>→ 1ère augmentation : 14 mai 2026</strong>
         </p>
       </div>
       <div class="info-box amber">
-        <div class="info-box-title">Autre exemple — embauche en janvier 2026</div>
+        <div class="info-box-title">Autre exemple — date manquée de peu</div>
         <p>
-          <strong>Date d'embauche : 1er janvier 2026</strong><br>
-          6 mois d'ancienneté atteints : 1er juillet 2026<br>
-          1ère date SR après juillet 2026 : 6 août 2026<br>
+          <strong>Date d'embauche : 25 février 2026</strong><br>
+          3 mois d'ancienneté atteints : 25 mai 2026<br>
+          Date SR du 14 mai 2026 → manquée (avant les 3 mois)<br>
+          1ère date SR après le 25 mai 2026 : 6 août 2026<br>
           <strong>→ 1ère augmentation : 6 août 2026</strong>
         </p>
       </div>
@@ -667,35 +668,35 @@ const LEVELS = ["Junior 1","Junior 2","Junior 3","Intermédiaire 1","Intermédia
 
 const GRID = {
   // Service client
-  "Agent service client":                   [40000,40000,40000,41500,43000,45000,50000,60000,70000],
-  "Chef d'équipe service client":           [42000,44500,47500,49500,55000,60000,69000,78000,87000],
-  "Formateur service client":               [41000,43500,46500,48500,53000,58000,65000,74000,80000],
-  "Directeur service aux usagers":          [55000,60000,65000,70000,75000,85000,95000,115000,140000],
+  "Agent.e service client":                   [40000,40000,40000,41500,43000,45000,50000,60000,70000],
+  "Chef.fe d'équipe service client":           [42000,44500,47500,49500,55000,60000,69000,78000,87000],
+  "Formateur.trice service client":               [41000,43500,46500,48500,53000,58000,65000,74000,80000],
+  "Directeur.trice service aux usagers":          [55000,60000,65000,70000,75000,85000,95000,115000,140000],
   // Ventes
-  "Chargé de compte":                       [40000,40000,42500,47500,50000,55000,62500,72500,85000],
+  "Chargé.e de compte":                       [40000,40000,42500,47500,50000,55000,62500,72500,85000],
   "Gestionnaire de compte entrepreneur":    [40000,42500,45000,52500,57500,62500,75000,87500,100000],
   "Gestionnaire de compte clé entrepreneur":[55000,57500,60000,65000,70000,77500,90000,100000,115000],
-  "Chef d'équipe vente":                    [45000,47500,52500,62500,70000,77500,90000,100000,115000],
-  "Chef d'équipe support vente":            [45000,47500,50000,55000,60000,65000,75000,85000,100000],
+  "Chef.fe d'équipe vente":                    [45000,47500,52500,62500,70000,77500,90000,100000,115000],
+  "Chef.fe d'équipe support vente":            [45000,47500,50000,55000,60000,65000,75000,85000,100000],
   "Recrutement entrepreneur":               [40000,40000,40000,41500,43000,45000,50000,60000,70000],
-  "Directeur vente":                        [65000,70000,75000,80000,90000,100000,120000,140000,160000],
+  "Directeur.trice vente":                        [65000,70000,75000,80000,90000,100000,120000,140000,160000],
   // Marketing
-  "Coordinateur marketing":                 [40000,40000,42000,44000,47000,50000,55000,65000,80000],
+  "Coordinateur.trice marketing":                 [40000,40000,42000,44000,47000,50000,55000,65000,80000],
   "Stratège de contenu":                    [40000,40000,42000,44000,47000,50000,55000,65000,80000],
-  "Rédacteur":                              [40000,40000,42000,44000,47000,50000,55000,65000,75000],
+  "Rédacteur.trice":                              [40000,40000,42000,44000,47000,50000,55000,65000,75000],
   "Graphique designer":                     [40000,40000,40000,45000,50000,55000,65000,75000,85000],
   "Spécialiste marketing digital":          [45000,50000,55000,60000,70000,80000,90000,100000,125000],
-  "Concepteur expérience utilisateur":      [40000,45000,50000,57500,65000,75000,85000,95000,110000],
-  "Directeur marketing":                    [70000,75000,80000,90000,100000,110000,130000,150000,175000],
+  "Concepteur.trice expérience utilisateur":      [40000,45000,50000,57500,65000,75000,85000,95000,110000],
+  "Directeur.trice marketing":                    [70000,75000,80000,90000,100000,110000,130000,150000,175000],
   // Technologie
-  "Développeur":                            [50000,55000,65000,70000,80000,90000,100000,120000,150000],
+  "Développeur.euse":                            [50000,55000,65000,70000,80000,90000,100000,120000,150000],
   "Propriétaire de produit":               [45000,50000,60000,65000,75000,85000,95000,115000,140000],
-  "Directeur technique":                    [80000,90000,100000,110000,120000,130000,145000,160000,200000],
+  "Directeur.trice technique":                    [80000,90000,100000,110000,120000,130000,145000,160000,200000],
   // Administration
-  "Agent administratif":                    [40000,40000,40000,41500,43000,45000,50000,60000,70000],
-  "Chef d'équipe admin":                    [45000,50000,55000,60000,65000,75000,85000,100000,120000],
-  "Traducteur":                             [40000,40000,42000,44000,47000,50000,55000,65000,75000],
-  "Directeur admin":                        [45000,50000,55000,60000,65000,75000,85000,100000,120000],
+  "Agent.e administratif.ve":                    [40000,40000,40000,41500,43000,45000,50000,60000,70000],
+  "Chef.fe d'équipe admin":                    [45000,50000,55000,60000,65000,75000,85000,100000,120000],
+  "Traducteur.trice":                             [40000,40000,42000,44000,47000,50000,55000,65000,75000],
+  "Directeur.trice admin":                        [45000,50000,55000,60000,65000,75000,85000,100000,120000],
 };
 
 // ── Dates exactes des augmentations SR ──────────────────────────────────
@@ -740,8 +741,8 @@ function firstAugDate(hireDateStr){
   if(!hireDateStr) return null;
   const hire=new Date(hireDateStr+"T00:00:00");
   const eligible=new Date(hire);
-  eligible.setMonth(eligible.getMonth()+6);
-  // Find first exact SR pay date on or after eligibility
+  eligible.setMonth(eligible.getMonth()+3);
+  // Find first exact SR pay date on or after eligibility (3 calendar months)
   const exact=SR_PAY_DATES.find(d=>d>=eligible);
   if(exact) return exact;
   // Fallback: next SR quarter month
@@ -929,8 +930,8 @@ function recalc(){
 
   // Vacation option — mini simulator
   const availHours=CFG.TOTAL_HOURS-CFG.VAC_EXCL-vacBank;
-  const vacPerQtr=Math.round(availHours*firstRate);
-  const vacPerQtrFull=Math.round((CFG.TOTAL_HOURS-CFG.VAC_EXCL-vacBank)*ACCEL_RATE);
+  // POINT 5: vacation calc ALWAYS uses base rate (never accelerator)
+  const vacPerQtr=availHours*CFG.BASE_RATE;
   updateVacTimeline(vacBank, vacPerQtr, firstRate);
 
   // Build quarterly table — using real SR pay dates
@@ -955,7 +956,7 @@ function recalc(){
 
   const fmtDate=(d)=>d.toLocaleDateString('fr-CA',{day:'numeric',month:'short',year:'numeric'});
 
-  for(let i=0;i<40;i++){
+  for(let i=0;i<12;i++){
     const r=rows[i];
     const qNum=i+1;
     const yearNum=Math.ceil(qNum/4);
@@ -991,7 +992,7 @@ function recalc(){
   }
 
   document.getElementById('tableFootnote').textContent=
-    'Dates SR 2026 confirmées · * Dates 2027+ approximatives (à confirmer avec Michel) · Accélérateur 3,75 % actif jusqu\'au seuil'+(gridMin?' ('+fmt(gridMin)+')':'');
+    'Tableau affiché sur 3 ans (les projections 1, 5 et 10 ans en haut sont calculées sur 10 ans complets) · Dates SR 2026 confirmées · * Dates 2027+ approximatives (à confirmer avec Michel) · Accélérateur 3,75 % actif jusqu\'au seuil'+(gridMin?' ('+fmt(gridMin)+')':'');
 
   // Chart (10 years)
   drawChart(rows,gridMin,sal);
@@ -1064,8 +1065,8 @@ function updateVacTimeline(currentExtra, vacPerQtr, rate){
   const BASE_H=80; // 2 semaines de base SR
   const scenarios=[
     {label:"Aujourd'hui — vacances de base SR", extra:BASE_H+currentExtra, isBase:true, highlight:false},
-    {label:"Après 1 augmentation prise en vacances", extra:BASE_H+currentExtra+vacPerQtr, isBase:false, highlight:false},
-    {label:"Après 4 augmentations en vacances (1 an complet)", extra:BASE_H+currentExtra+(vacPerQtr*4), isBase:false, highlight:true},
+    {label:"Après 1 augmentation prise en vacances", extra:BASE_H+currentExtra+vacPerQtr, isBase:false, highlight:true},
+    {label:"Après 4 augmentations en vacances (1 an complet)", extra:BASE_H+currentExtra+(vacPerQtr*4), isBase:false, highlight:false},
   ];
 
   const maxExtra=scenarios[scenarios.length-1].extra;
@@ -1091,7 +1092,7 @@ function updateVacTimeline(currentExtra, vacPerQtr, rate){
             <div style="width:${pct}%;height:100%;background:${bgBar};border-radius:5px;transition:width 0.4s"></div>
           </div>
           <div style="text-align:right;min-width:80px">
-            <div style="font-size:14px;font-weight:700;color:${color}">${extra} heures</div>
+            <div style="font-size:14px;font-weight:700;color:${color}">${extra.toFixed(1)} heures</div>
             <div style="font-size:11px;color:var(--text3)">${days} jours · ${weeks} semaines</div>
           </div>
         </div>
@@ -1108,11 +1109,11 @@ function buildGridTable(){
   tbody.innerHTML='';
   // Group by department
   const groups={
-    "Service client":["Agent service client","Chef d'équipe service client","Formateur service client","Directeur service aux usagers"],
-    "Ventes":["Chargé de compte","Gestionnaire de compte entrepreneur","Gestionnaire de compte clé entrepreneur","Chef d'équipe vente","Chef d'équipe support vente","Recrutement entrepreneur","Directeur vente"],
-    "Marketing":["Coordinateur marketing","Stratège de contenu","Rédacteur","Graphique designer","Spécialiste marketing digital","Concepteur expérience utilisateur","Directeur marketing"],
-    "Technologie":["Développeur","Propriétaire de produit","Directeur technique"],
-    "Administration":["Agent administratif","Chef d'équipe admin","Traducteur","Directeur admin"],
+    "Service client":["Agent.e service client","Chef.fe d'équipe service client","Formateur.trice service client","Directeur.trice service aux usagers"],
+    "Ventes":["Chargé.e de compte","Gestionnaire de compte entrepreneur","Gestionnaire de compte clé entrepreneur","Chef.fe d'équipe vente","Chef.fe d'équipe support vente","Recrutement entrepreneur","Directeur.trice vente"],
+    "Marketing":["Coordinateur.trice marketing","Stratège de contenu","Rédacteur.trice","Graphique designer","Spécialiste marketing digital","Concepteur.trice expérience utilisateur","Directeur.trice marketing"],
+    "Technologie":["Développeur.euse","Propriétaire de produit","Directeur.trice technique"],
+    "Administration":["Agent.e administratif.ve","Chef.fe d'équipe admin","Traducteur.trice","Directeur.trice admin"],
   };
   Object.entries(groups).forEach(([grp,postes])=>{
     // group header
